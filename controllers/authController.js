@@ -9,7 +9,6 @@ const registerUser = async (req, res) => {
   try {
     // Check if user already exists
     let user = await User.findOne({ where: { email } }); // PostgreSQL
-    // let user = await User.findOne({ email }); // MongoDB
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });
     }
@@ -20,14 +19,11 @@ const registerUser = async (req, res) => {
 
     // Create new user
     user = await User.create({ name, email, password: hashedPassword }); // PostgreSQL
-    // user = new User({ name, email, password: hashedPassword }); // MongoDB
-    // await user.save(); // For MongoDB
 
     // Create and return a JWT token
     const payload = {
       user: {
         id: user.id, // For PostgreSQL
-        // id: user._id, // For MongoDB
       },
     };
 
@@ -47,7 +43,6 @@ const loginUser = async (req, res) => {
   try {
     // Check if user exists
     let user = await User.findOne({ where: { email } }); // PostgreSQL
-    // let user = await User.findOne({ email }); // MongoDB
     if (!user) {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
@@ -62,7 +57,6 @@ const loginUser = async (req, res) => {
     const payload = {
       user: {
         id: user.id, // For PostgreSQL
-        // id: user._id, // For MongoDB
       },
     };
 
@@ -75,14 +69,13 @@ const loginUser = async (req, res) => {
   }
 };
 
-
+// Bookmark Event
 const bookmarkEvent = async (req, res) => {
     
     const { eventId } = req.body;
   
     try {
       let user = await User.findByPk(req.user.id); // PostgreSQL
-      // let user = await User.findById(req.user.id); // MongoDB
   
       if (!user) {
         return res.status(404).json({ msg: 'User not found' });
@@ -100,6 +93,5 @@ const bookmarkEvent = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
-  
 
 module.exports = { registerUser, loginUser, bookmarkEvent };

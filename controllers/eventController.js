@@ -16,27 +16,6 @@ const getEvents = async (req, res) => {
 };
 
 // Add a new event
-// const addEvent = async (req, res) => {
-//   const { name, type, address, latitude, longitude, description, date_time } = req.body;
-
-//   try {
-//     const newEvent = await Event.create({
-//       name,
-//       type,
-//       address,
-//       latitude,
-//       longitude,
-//       description,
-//       date_time,
-//     });
-
-//     res.json(newEvent);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// };
-
 const addEvent = async (req, res) => {
     const { name, type, address, latitude, longitude, description, date_time } = req.body;
   
@@ -58,41 +37,8 @@ const addEvent = async (req, res) => {
       res.status(500).send('Server error');
     }
   };
-  
 
-// const updateEvent = async (req, res) => {
-//     const { id } = req.params;
-//     const { name, type, address, latitude, longitude, description, date_time } = req.body;
-  
-//     try {
-//       // Find the event by ID
-//       let event = await Event.findByPk(id); // PostgreSQL
-//       // let event = await Event.findById(id); // MongoDB
-  
-//       if (!event) {
-//         return res.status(404).json({ msg: 'Event not found' });
-//       }
-  
-//       // Update event details
-//       event.name = name || event.name;
-//       event.type = type || event.type;
-//       event.address = address || event.address;
-//       event.latitude = latitude || event.latitude;
-//       event.longitude = longitude || event.longitude;
-//       event.description = description || event.description;
-//       event.date_time = date_time || event.date_time;
-  
-//       await event.save(); // PostgreSQL
-//       // await event.save(); // MongoDB
-  
-//       res.json(event);
-//     } catch (err) {
-//       console.error(err.message);
-//       res.status(500).send('Server Error');
-//     }
-//   };
-
-
+// Update an existing event
 const updateEvent = async (req, res) => {
     const { id } = req.params;
     const { name, type, address, latitude, longitude, description, date_time } = req.body;
@@ -122,7 +68,7 @@ const updateEvent = async (req, res) => {
     }
   };
   
-
+// Delete an event
   const deleteEvent = async (req, res) => {
     const { id } = req.params;
   
@@ -144,110 +90,7 @@ const updateEvent = async (req, res) => {
     }
   };
   
-
-// Function to fetch nearby events using sequelize
-
-
-// const getNearbyEvents = async (req, res) => {
-//     const { latitude, longitude, radius = 10 } = req.query;
-//     console.log('Query params:', { latitude, longitude, radius });
-
-  
-//     try {
-//       const nearbyEvents = await Event.findAll({
-//         where: sequelize.literal(
-//           `ST_DWithin(location, ST_MakePoint(${longitude}, ${latitude})::geography, ${radius * 1000})`
-//         ),
-//       });
-      
-//       res.json(nearbyEvents);
-//     } catch (err) {
-//       console.error('Error fetching nearby events:', err.message);
-//       res.status(500).send('Server Error');
-//     }
-//   };
-  
-  
-
-// New
-// const getNearbyEvents = async (req, res) => {
-//     const { latitude, longitude, radius = 10, type, sort } = req.query;
-//     console.log('Query params:', { latitude, longitude, radius, type, sort });
-  
-//     try {
-//       // Build the query object for filtering
-//       const query = {
-//         where: sequelize.literal(
-//           `ST_DWithin(location, ST_MakePoint(${longitude}, ${latitude})::geography, ${radius * 1000})`
-//         ),
-//       };
-  
-//       // Add filter by event type if provided
-//       if (type) {
-//         query.where = {
-//           ...query.where,
-//           type, // Add the event type to the filter condition
-//         };
-//       }
-  
-//       // Add sorting by distance if required
-//       if (sort === 'distance') {
-//         query.order = [
-//           [sequelize.literal(`ST_Distance(location, ST_MakePoint(${longitude}, ${latitude})::geography)`), 'ASC'],
-//         ];
-//       }
-  
-//       // Add sorting by date if required
-//       if (sort === 'date') {
-//         query.order = [['date_time', 'ASC']]; // Sort events by date
-//       }
-  
-//       // Fetch the events based on filters and sorting
-//       const nearbyEvents = await Event.findAll(query);
-      
-//       res.json(nearbyEvents);
-//     } catch (err) {
-//       console.error('Error fetching nearby events:', err.message);
-//       res.status(500).send('Server Error');
-//     }
-//   };
-  
-
- // Ensure Op and literal are imported
-// const getNearbyEvents = async (req, res) => {
-//   const { latitude, longitude, radius = 10, type, sort } = req.query;
-//   console.log('Query params:', { latitude, longitude, radius, type, sort });
-
-//   try {
-//     // Define where clause for event type if provided
-//     const whereClause = {};
-//     if (type) {
-//       whereClause.type = type; // Add event type to the where clause
-//     }
-
-//     // Define the query with the spatial condition as a raw SQL literal
-//     const nearbyEvents = await Event.findAll({
-//       where: {
-//         ...whereClause,
-//         [Op.and]: literal(
-//           `ST_DWithin(location, ST_MakePoint(${longitude}, ${latitude})::geography, ${radius * 1000})`
-//         ),
-//       },
-//       order: sort === 'distance' 
-//         ? [literal(`ST_Distance(location, ST_MakePoint(${longitude}, ${latitude})::geography)`), 'ASC'] 
-//         : sort === 'date' 
-//         ? [['date_time', 'ASC']]
-//         : undefined,
-//     });
-
-//     res.json(nearbyEvents);
-//   } catch (err) {
-//     console.error('Error fetching nearby events:', err.message);
-//     res.status(500).send('Server Error');
-//   }
-// };
-
-// const { Op, literal } = require('sequelize'); // Ensure Op and literal are imported
+// Get nearby events
 const getNearbyEvents = async (req, res) => {
   const { latitude, longitude, radius = 10, type, sort } = req.query;
   console.log('Query params:', { latitude, longitude, radius, type, sort });
@@ -282,7 +125,7 @@ const getNearbyEvents = async (req, res) => {
   }
 };
 
-
+// Get event by ID
 const getEventById = async (req, res) => {
     try {
       const event = await Event.findByPk(req.params.id); // Find event by primary key (ID)
@@ -297,7 +140,5 @@ const getEventById = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
-
-  
 
 module.exports = { getEvents, addEvent, updateEvent, deleteEvent, getNearbyEvents, getEventById };
